@@ -24,25 +24,29 @@ function Chatbot() {
         scrollToBottom();
     }, [messages]);
 
-const handleSend = async (e) => {
-    e.preventDefault();
-    if (!input.trim()) return;
+    const handleSend = async (e) => {
+        e.preventDefault();
+        if (!input.trim()) return;
 
-    const userMessage = { text: input, sender: 'user' };
-    const thinkingMessage = { text: '...', sender: 'bot', isLoading: true };
+        const userMessage = { text: input, sender: 'user' };
+        const thinkingMessage = { text: '...', sender: 'bot', isLoading: true };
 
-    setMessages(prev => [...prev, userMessage, thinkingMessage]);
-    setInput('');
-    setIsLoading(true); // עדיין מפעיל את רכיב הטעינה
+        setMessages(prev => [...prev, userMessage, thinkingMessage]);
+        setInput('');
+        setIsLoading(true); // עדיין מפעיל את רכיב הטעינה
 
         try {
             const response = await axios.post(API_URL, { message: userMessage.text });
             const botMessage = { text: response.data.response, sender: 'bot' };
-            setMessages(prev => [...prev, botMessage]);
+
+            // הסר את בועת החשיבה מהמערך והוסף את התשובה של הבוט
+            setMessages(prev => [...prev.slice(0, -1), botMessage]);
         } catch (error) {
             console.error('Error sending message:', error);
             const errorMessage = { text: 'אופס! משהו השתבש, אנא נסה שוב מאוחר יותר.', sender: 'bot' };
-            setMessages(prev => [...prev, errorMessage]);
+
+            // הסר את בועת החשיבה מהמערך והוסף את הודעת השגיאה
+            setMessages(prev => [...prev.slice(0, -1), errorMessage]);
         } finally {
             setIsLoading(false);
         }
@@ -66,14 +70,14 @@ const handleSend = async (e) => {
                     </div>
                 ))} */}
 
-{messages.map((msg, index) => (
-  <div key={index} className={`message-bubble ${msg.sender}`}>
-    {/* בדיקה אם msg.text קיים והוא מסוג מחרוזת */}
-    {msg.text && typeof msg.text === 'string' && msg.text.split('\n').map((line, lineIndex) => (
-      <p key={lineIndex}>{line}</p>
-    ))}
-  </div>
-))}
+                {messages.map((msg, index) => (
+                    <div key={index} className={`message-bubble ${msg.sender}`}>
+                        {/* בדיקה אם msg.text קיים והוא מסוג מחרוזת */}
+                        {msg.text && typeof msg.text === 'string' && msg.text.split('\n').map((line, lineIndex) => (
+                            <p key={lineIndex}>{line}</p>
+                        ))}
+                    </div>
+                ))}
 
 
                 {/* {messages.map((msg, index) => (
