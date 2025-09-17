@@ -4,8 +4,9 @@ import axios from 'axios';
 import SpinningEarth from './SpinningEarth';
 import './Chatbot.css';
 
-// משתנה סביבה שמכיל את כתובת השרת
-const API_URL = process.env.REACT_APP_API_URL;
+// משתנה סביבה שמכיל את כתובת השרת.
+// נטפל גם במקרה שבו המשתנה אינו מוגדר.
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5153";
 
 function Chatbot() {
   const [messages, setMessages] = useState([]);
@@ -13,19 +14,19 @@ function Chatbot() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // פונקציית גלילה אוטומטית לתחתית השיחה
+  // פונקציית גלילה אוטומטית
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // הצגת הודעת הפתיחה בטעינת הקומפוננטה
+  // מציג הודעת פתיחה בטעינה הראשונית של הקומפוננטה.
   useEffect(() => {
     setMessages([
       { text: "👋 שלום! אני כאן כדי לעזור לך לתכנן טיולים, נדאג לחזות את מזג האוויר לכל יום ולהציע את הנסיעות הטובות ביותר .", sender: "bot" },
     ]);
   }, []);
 
-  // גלילה אוטומטית בכל פעם שמערך ההודעות מתעדכן
+  // גלילה אוטומטית בכל פעם שמערך ההודעות מתעדכן.
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -35,26 +36,30 @@ function Chatbot() {
     e.preventDefault();
     if (!input.trim()) return;
 
-    const userMessage = { text: input, sender: 'user' };
+    // ודא שה-API_URL קיים לפני שליחת הבקשה
+    if (!API_URL) {
+      console.error("API URL is not defined. Please check your environment variables.");
+      const errorMessage = { text: 'אירעה שגיאה: כתובת השרת לא הוגדרה כראוי.', sender: 'bot' };
+      setMessages((prev) => [...prev, errorMessage]);
+      setIsLoading(false);
+      return;
+    }
 
-    // עדכון מיידי של ממשק המשתמש עם הודעת המשתמש
+    const userMessage = { text: input, sender: 'user' };
+    
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
 
     try {
-      // שליחת בקשת POST לשרת
       const response = await axios.post(`${API_URL}/chat`, { message: userMessage.text });
-
-      // בדיקת תקינות התשובה לפני השימוש בה
       const botResponse = response?.data?.response;
 
       if (botResponse && typeof botResponse === 'string') {
         const botMessage = { text: botResponse, sender: 'bot' };
         setMessages((prev) => [...prev, botMessage]);
       } else {
-        // השרת החזיר תשובה לא תקינה
-        const errorMessage = { text: 'השרת לא החזיר תשובה תקינה. ייתכן שיש בעיה בצד השרת.', sender: 'bot' };
+        const errorMessage = { text: 'השרת לא החזיר תשובה תקינה.', sender: 'bot' };
         setMessages((prev) => [...prev, errorMessage]);
       }
     } catch (error) {
@@ -62,7 +67,6 @@ function Chatbot() {
       const errorMessage = { text: 'אופס! משהו השתבש, אנא נסה שוב מאוחר יותר.', sender: 'bot' };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
-      // מכבה את מצב הטעינה
       setIsLoading(false);
     }
   };
@@ -76,11 +80,9 @@ function Chatbot() {
       <div className="chatbot-messages">
         {messages.map((msg, index) => (
           <div key={index} className={`message-bubble ${msg.sender}`}>
-            {/* ודא ש-msg.text הוא מחרוזת לפני הפיצול */}
             {msg.text && typeof msg.text === 'string' ? (
               msg.text.split('\n').map((line, lineIndex) => <p key={lineIndex}>{line}</p>)
             ) : (
-              // אם הנתונים לא תקינים, הצג פשוט את התוכן של האובייקט
               <p>{JSON.stringify(msg.text)}</p>
             )}
           </div>
