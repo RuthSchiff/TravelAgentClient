@@ -64,13 +64,23 @@ function Chatbot() {
                     </div>
                 ))} */}
 
-                {messages.map((msg, index) => (
+{messages.map((msg, index) => (
+  <div key={index} className={`message-bubble ${msg.sender}`}>
+    {/* בדיקה אם msg.text קיים והוא מסוג מחרוזת */}
+    {msg.text && typeof msg.text === 'string' && msg.text.split('\n').map((line, lineIndex) => (
+      <p key={lineIndex}>{line}</p>
+    ))}
+  </div>
+))}
+
+
+                {/* {messages.map((msg, index) => (
                     <div key={index} className={`message-bubble ${msg.sender}`}>
                         {(msg.text || "").split('\n').map((line, lineIndex) => (
                             <p key={lineIndex}>{line}</p>
                         ))}
                     </div>
-                ))}
+                ))} */}
 
                 {isLoading && (
                     <div className="message-bubble bot is-loading">
