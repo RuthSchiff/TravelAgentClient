@@ -6,7 +6,8 @@ import './Chatbot.css';
 
 // משתנה סביבה שמכיל את כתובת השרת.
 // נטפל גם במקרה שבו המשתנה אינו מוגדר.
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5153";
+
+const API_URL = process.env.REACT_APP_API_URL;
 
 function Chatbot() {
   const [messages, setMessages] = useState([]);
