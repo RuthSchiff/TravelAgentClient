@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import SpinningEarth from './SpinningEarth';
+import SpinningEarth from './SpinningEarth'; 
 import './Chatbot.css'; // נדאג ליצור את הקובץ הזה בהמשך
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -16,8 +16,8 @@ function Chatbot() {
     };
 
     useEffect(() => {
-        setMessages([{ text: "👋 שלום! אני כאן כדי לעזור לך לתכנן טיולים, נדאג לחזות את מזג האוויר לכל יום ולהציע את הנסיעות הטובות ביותר .", sender: "bot" }]);
-    }, []);
+  setMessages([{ text: "👋 שלום! אני כאן כדי לעזור לך לתכנן טיולים, נדאג לחזות את מזג האוויר לכל יום ולהציע את הנסיעות הטובות ביותר .", sender: "bot" }]);
+}, []);
 
 
     useEffect(() => {
@@ -29,24 +29,18 @@ function Chatbot() {
         if (!input.trim()) return;
 
         const userMessage = { text: input, sender: 'user' };
-        const thinkingMessage = { text: '...', sender: 'bot', isLoading: true };
-
-        setMessages(prev => [...prev, userMessage, thinkingMessage]);
+        setMessages(prev => [...prev, userMessage]);
         setInput('');
-        setIsLoading(true); // עדיין מפעיל את רכיב הטעינה
+        setIsLoading(true);
 
         try {
             const response = await axios.post(API_URL, { message: userMessage.text });
             const botMessage = { text: response.data.response, sender: 'bot' };
-
-            // הסר את בועת החשיבה מהמערך והוסף את התשובה של הבוט
-            setMessages(prev => [...prev.slice(0, -1), botMessage]);
+            setMessages(prev => [...prev, botMessage]);
         } catch (error) {
             console.error('Error sending message:', error);
             const errorMessage = { text: 'אופס! משהו השתבש, אנא נסה שוב מאוחר יותר.', sender: 'bot' };
-
-            // הסר את בועת החשיבה מהמערך והוסף את הודעת השגיאה
-            setMessages(prev => [...prev.slice(0, -1), errorMessage]);
+            setMessages(prev => [...prev, errorMessage]);
         } finally {
             setIsLoading(false);
         }
@@ -54,40 +48,21 @@ function Chatbot() {
 
     return (
 
-
+        
         <div className="chatbot-container">
-            <SpinningEarth />
+             <SpinningEarth /> 
             <div className="chatbot-header">
                 <h1>TripMate</h1>
             </div>
             <div className="chatbot-messages">
-
-                {/* {messages.map((msg, index) => (
+                
+                {messages.map((msg, index) => (
                     <div key={index} className={`message-bubble ${msg.sender}`}>
                         {msg.text.split('\n').map((line, lineIndex) => (
                             <p key={lineIndex}>{line}</p>
                         ))}
                     </div>
-                ))} */}
-
-                {messages.map((msg, index) => (
-                    <div key={index} className={`message-bubble ${msg.sender}`}>
-                        {/* בדיקה אם msg.text קיים והוא מסוג מחרוזת */}
-                        {msg.text && typeof msg.text === 'string' && msg.text.split('\n').map((line, lineIndex) => (
-                            <p key={lineIndex}>{line}</p>
-                        ))}
-                    </div>
                 ))}
-
-
-                {/* {messages.map((msg, index) => (
-                    <div key={index} className={`message-bubble ${msg.sender}`}>
-                        {(msg.text || "").split('\n').map((line, lineIndex) => (
-                            <p key={lineIndex}>{line}</p>
-                        ))}
-                    </div>
-                ))} */}
-
                 {isLoading && (
                     <div className="message-bubble bot is-loading">
                         <div className="loading-dot"></div>
@@ -107,13 +82,13 @@ function Chatbot() {
                 <button type="submit" disabled={isLoading}>
                     <i className="fas fa-paper-plane"></i>
                 </button>
-
+              
 
             </form>
 
-
+            
         </div>
-
+        
     );
 }
 
