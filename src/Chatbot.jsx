@@ -3,11 +3,7 @@ import axios from 'axios';
 import SpinningEarth from './SpinningEarth';
 import './Chatbot.css'; // נדאג ליצור את הקובץ הזה בהמשך
 
-// const API_URL = 'http://localhost:5153/chat';
 const API_URL = process.env.REACT_APP_API_URL;
-
-// fetch(`${API_URL}/chat`, { ... });
-
 
 function Chatbot() {
     const [messages, setMessages] = useState([]);
@@ -60,13 +56,22 @@ function Chatbot() {
             </div>
             <div className="chatbot-messages">
 
-                {messages.map((msg, index) => (
+                {/* {messages.map((msg, index) => (
                     <div key={index} className={`message-bubble ${msg.sender}`}>
                         {msg.text.split('\n').map((line, lineIndex) => (
                             <p key={lineIndex}>{line}</p>
                         ))}
                     </div>
+                ))} */}
+
+                {messages.map((msg, index) => (
+                    <div key={index} className={`message-bubble ${msg.sender}`}>
+                        {(msg.text || "").split('\n').map((line, lineIndex) => (
+                            <p key={lineIndex}>{line}</p>
+                        ))}
+                    </div>
                 ))}
+
                 {isLoading && (
                     <div className="message-bubble bot is-loading">
                         <div className="loading-dot"></div>
