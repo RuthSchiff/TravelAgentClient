@@ -24,14 +24,16 @@ function Chatbot() {
         scrollToBottom();
     }, [messages]);
 
-    const handleSend = async (e) => {
-        e.preventDefault();
-        if (!input.trim()) return;
+const handleSend = async (e) => {
+    e.preventDefault();
+    if (!input.trim()) return;
 
-        const userMessage = { text: input, sender: 'user' };
-        setMessages(prev => [...prev, userMessage]);
-        setInput('');
-        setIsLoading(true);
+    const userMessage = { text: input, sender: 'user' };
+    const thinkingMessage = { text: '...', sender: 'bot', isLoading: true };
+
+    setMessages(prev => [...prev, userMessage, thinkingMessage]);
+    setInput('');
+    setIsLoading(true); // עדיין מפעיל את רכיב הטעינה
 
         try {
             const response = await axios.post(API_URL, { message: userMessage.text });
