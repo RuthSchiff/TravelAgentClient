@@ -1,0 +1,91 @@
+/* Container for the entire animation */
+.earth-wrapper {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 160px;
+  height: 160px;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+/* The central "Earth" element */
+.earth {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff 0%, #4A90E2 30%, #7B1FA2 60%, #1a1a2e 100%);
+  box-shadow: inset -6px -6px 12px rgba(255, 255, 255, 0.25), inset 6px 6px 18px rgba(0, 0, 0, 0.35), 0 6px 24px rgba(123, 31, 162, 0.18);
+  animation: spin-earth 18s linear infinite;
+  transform-origin: center;
+}
+
+/* Keyframes for the Earth's rotation */
+@keyframes spin-earth {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* General class for all orbits */
+.orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation-name: spin-orbit;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* Keyframes for the orbit's rotation */
+@keyframes spin-orbit {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Style for the stars */
+.star {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, #FFD700, #FFB84D);
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(255, 215, 0, 0.9);
+  transform: translateX(-50%);
+}
+
+/* Style for the plane icons */
+.plane-icon {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  font-size: 28px;
+  color: #fff;
+  transform: translate(-50%, -50%) rotate(270deg); /* initial rotation to face correctly */
+  transform-origin: center;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.22));
+}
+
+/* Keyframes for the plane's counter-rotation */
+@keyframes counter-rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(270deg); /* 270 + 360 */
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(630deg);
+  }
+}
