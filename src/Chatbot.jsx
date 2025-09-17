@@ -1,10 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import SpinningEarth from './SpinningEarth'; 
+import SpinningEarth from './SpinningEarth';
 import './Chatbot.css'; // נדאג ליצור את הקובץ הזה בהמשך
 
-const API_URL = 'http://localhost:5153/chat';
+// const API_URL = 'http://localhost:5153/chat';
+const API_URL = process.env.REACT_APP_API_URL;
 
+// fetch(`${API_URL}/chat`, { ... });
+
+fetch(`${API_URL}/chat`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ message: 'Hello' }),
+})
+    .then((response) => response.json())
+    .then((data) => console.log(data))
+    .catch((error) => console.error('Error:', error));
 function Chatbot() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
@@ -16,8 +29,8 @@ function Chatbot() {
     };
 
     useEffect(() => {
-  setMessages([{ text: "👋 שלום! אני כאן כדי לעזור לך לתכנן טיולים, נדאג לחזות את מזג האוויר לכל יום ולהציע את הנסיעות הטובות ביותר .", sender: "bot" }]);
-}, []);
+        setMessages([{ text: "👋 שלום! אני כאן כדי לעזור לך לתכנן טיולים, נדאג לחזות את מזג האוויר לכל יום ולהציע את הנסיעות הטובות ביותר .", sender: "bot" }]);
+    }, []);
 
 
     useEffect(() => {
@@ -48,14 +61,14 @@ function Chatbot() {
 
     return (
 
-        
+
         <div className="chatbot-container">
-             <SpinningEarth /> 
+            <SpinningEarth />
             <div className="chatbot-header">
                 <h1>TripMate</h1>
             </div>
             <div className="chatbot-messages">
-                
+
                 {messages.map((msg, index) => (
                     <div key={index} className={`message-bubble ${msg.sender}`}>
                         {msg.text.split('\n').map((line, lineIndex) => (
@@ -82,13 +95,13 @@ function Chatbot() {
                 <button type="submit" disabled={isLoading}>
                     <i className="fas fa-paper-plane"></i>
                 </button>
-              
+
 
             </form>
 
-            
+
         </div>
-        
+
     );
 }
 
