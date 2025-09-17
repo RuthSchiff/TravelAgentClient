@@ -77,7 +77,7 @@ function Chatbot() {
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="✨ מוזמין אותך לשאול אותי כל שאלה "
+                    placeholder="✨ מזמין אותך לשאול אותי כל שאלה "
                 />
                 <button type="submit" disabled={isLoading}>
                     <i className="fas fa-paper-plane"></i>
