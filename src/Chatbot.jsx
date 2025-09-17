@@ -62,7 +62,7 @@ function Chatbot() {
 
                 {messages.map((msg, index) => (
                     <div key={index} className={`message-bubble ${msg.sender}`}>
-                        {/* בדיקה אם msg.text קיים והוא מסוג מחרוזת */}
+                        {/* התיקון נמצא כאן: בדקי אם msg.text קיים והוא מסוג מחרוזת לפני הניסיון לבצע split */}
                         {msg.text && typeof msg.text === 'string' && msg.text.split('\n').map((line, lineIndex) => (
                             <p key={lineIndex}>{line}</p>
                         ))}
