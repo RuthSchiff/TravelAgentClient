@@ -8,16 +8,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 // fetch(`${API_URL}/chat`, { ... });
 
-fetch(`${API_URL}/chat`, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ message: 'Hello' }),
-})
-    .then((response) => response.json())
-    .then((data) => console.log(data))
-    .catch((error) => console.error('Error:', error));
+
 function Chatbot() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
@@ -71,7 +62,8 @@ function Chatbot() {
 
                 {messages.map((msg, index) => (
                     <div key={index} className={`message-bubble ${msg.sender}`}>
-                        {msg.text.split('\n').map((line, lineIndex) => (
+                        {/* בדיקה אם msg.text קיים והוא מסוג מחרוזת */}
+                        {msg.text && typeof msg.text === 'string' && msg.text.split('\n').map((line, lineIndex) => (
                             <p key={lineIndex}>{line}</p>
                         ))}
                     </div>
